@@ -46,26 +46,18 @@ public class TestProgram {
                 output.append(url).append("\n");
                 output.append(metadata).append("\n");
 
-                // Write keywords (limit to 10)
+                // Write keywords
                 if (keywords != null) {
-                    int count = 0;
                     for (Map.Entry<String, Integer> entry : keywords.entrySet()) {
-                        if (count >= 10)
-                            break;
                         output.append(entry.getKey()).append(" ").append(entry.getValue()).append("; ");
-                        count++;
                     }
                 }
                 output.append("\n");
 
                 // Write child links (limit to 10)
                 if (childLinks != null) {
-                    int count = 0;
                     for (String link : childLinks) {
-                        if (count >= 10)
-                            break;
                         output.append(link).append("\n");
-                        count++;
                     }
                 }
 

@@ -1,10 +1,9 @@
 package org.example;
 
-import org.htmlparser.Parser;
-import org.htmlparser.filters.TagNameFilter;
-import org.htmlparser.nodes.TagNode;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -42,47 +41,37 @@ public class WebCrawler {
             if (!shouldFetch(url))
                 return;
 
-            Parser parser = new Parser(url);
+            Document doc = Jsoup.connect(url).get();
 
-            // Extract Title
-            NodeList titleNodes = parser.extractAllNodesThatMatch(new TagNameFilter("title"));
-            String title = (titleNodes != null && titleNodes.size() > 0)
-                    ? titleNodes.elementAt(0).toPlainTextString().trim()
-                    : "No Title";
+            // Extract title
+            String title = doc.title().trim();
+            if (title.isEmpty())
+                title = "No Title";
 
-            // Extract Body
-            Parser bodyParser = new Parser(url);
-            NodeList bodyNodes = bodyParser.extractAllNodesThatMatch(new TagNameFilter("body"));
-            String body = (bodyNodes != null && bodyNodes.size() > 0)
-                    ? bodyNodes.elementAt(0).toPlainTextString().trim()
-                    : "";
-
+            // Extract body text (cleaned)
+            String body = doc.body().text().trim();
             int size = body.length();
             String lastModified = getLastModified(url);
 
-            // Extract child links
-            Parser linkParser = new Parser(url);
-            NodeList links = linkParser.extractAllNodesThatMatch(new TagNameFilter("a"));
+            // Extract child links (up to 10)
             List<String> childLinks = new ArrayList<>();
+            Elements links = doc.select("a[href]");
+            for (Element link : links) {
+                if (childLinks.size() >= 10)
+                    break;
 
-            for (int i = 0; i < links.size() && childLinks.size() < 10; i++) {
-                TagNode tag = (TagNode) links.elementAt(i);
-                String link = tag.getAttribute("href");
-
-                if (link != null) {
-                    link = resolveURL(url, link); // Convert to absolute URL
-                    if (!visited.contains(link)) {
-                        queue.add(link);
-                        childLinks.add(link);
-                    }
+                String absUrl = link.absUrl("href");
+                if (!visited.contains(absUrl) && !absUrl.isEmpty()) {
+                    queue.add(absUrl);
+                    childLinks.add(absUrl);
                 }
             }
 
             visited.add(url);
             indexer.indexPage(url, title, body, lastModified, size, childLinks);
 
-        } catch (ParserException e) {
-            System.out.println("Failed to parse: " + url);
+        } catch (IOException e) {
+            System.out.println("Failed to fetch or parse: " + url);
         }
     }
 
@@ -107,15 +96,6 @@ public class WebCrawler {
             return (date == 0) ? "Unknown" : new Date(date).toString();
         } catch (IOException e) {
             return "Unknown";
-        }
-    }
-
-    private String resolveURL(String baseUrl, String link) {
-        try {
-            URL base = new URL(baseUrl);
-            return new URL(base, link).toString(); // Convert relative to absolute URL
-        } catch (Exception e) {
-            return link; // Return as-is if resolution fails
         }
     }
 }

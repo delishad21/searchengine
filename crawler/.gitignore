@@ -8,3 +8,5 @@ build
 search_index.db
 search_index.lg
 spider_result.txt
+
+.vscode

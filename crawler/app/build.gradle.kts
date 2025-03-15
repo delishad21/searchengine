@@ -26,6 +26,8 @@ dependencies {
 
     implementation("jdbm:jdbm:1.0")
 
+    implementation("org.jsoup:jsoup:1.15.4")
+
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
