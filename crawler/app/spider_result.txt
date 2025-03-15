@@ -1,0 +1,76 @@
+books
+https://www.cse.ust.hk/~kwtleung/COMP4321/books.htm
+Tue May 16 13:03:16 SGT 2023, 217 bytes
+not 1; data 1; and 2; of 2; book 1; for 1; back 1; main 1; to 2; articl 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book1.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book2.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book3.htm
+-------------------------------
+BBC news
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc.htm
+Tue May 16 13:03:44 SGT 2023, 134 bytes
+new 2; blackburn 1; bbc 1; rar 1; mp 1; for 1; project 1; commitment 1; back 1; nest 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc1.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc2.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc3.htm
+-------------------------------
+book1
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book1.htm
+Tue May 16 13:03:16 SGT 2023, 1328 bytes
+a 6; or 6; th 12; thi 5; in 5; of 15; is 6; to 6; us 6; retriev 5; 
+-------------------------------
+Test page
+https://www.cse.ust.hk/~kwtleung/COMP4321/testpage.htm
+Tue May 16 13:03:16 SGT 2023, 209 bytes
+through 1; new 2; thes 2; th 2; her 1; and 1; of 2; book 1; for 1; is 2; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/books.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie.htm
+-------------------------------
+Movie Index Page
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie.htm
+Tue May 16 13:09:22 SGT 2023, 7906 bytes
+a 15; s 17; th 93; 2004 33; 2003 24; and 22; of 29; 2002 26; 2001 19; 2000 24; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/1.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/2.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/3.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/4.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/5.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/6.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/7.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/8.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/9.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/10.html
+-------------------------------
+CSE department of HKUST
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse.htm
+Tue May 16 13:03:16 SGT 2023, 77 bytes
+cs 1; ug 1; of 1; pg 1; hkust 1; back 1; main 1; admission 2; to 1; department 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/PG.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/UG.htm
+-------------------------------
+CNN news
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn.htm
+Tue May 16 13:03:44 SGT 2023, 113 bytes
+new 2; cnn 1; accordion 1; warm 1; caus 1; may 1; sauerkraut 1; back 1; is 1; to 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn1.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn2.htm
+-------------------------------
+News
+https://www.cse.ust.hk/~kwtleung/COMP4321/news.htm
+Tue May 16 13:03:16 SGT 2023, 44 bytes
+new 3; bbc 1; cnn 1; back 1; main 1; to 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn.htm
+-------------------------------
+PG
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/PG.htm
+Tue May 16 13:03:46 SGT 2023, 2874 bytes
+a 9; be 8; th 23; in 12; and 9; postgraduat 9; of 18; to 8; admission 8; program 7; 
+-------------------------------
+UG
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/UG.htm
+Tue May 16 13:03:46 SGT 2023, 3473 bytes
+nbsp 23; computer 9; study 7; th 17; in 14; year 7; and 13; of 21; program 16; to 7; 
+-------------------------------
