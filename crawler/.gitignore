@@ -3,3 +3,8 @@
 
 # Ignore Gradle build output directory
 build
+
+# Ignore generated files
+search_index.db
+search_index.lg
+spider_result.txt

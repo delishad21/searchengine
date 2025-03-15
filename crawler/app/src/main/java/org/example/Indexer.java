@@ -3,12 +3,17 @@ package org.example;
 import jdbm.RecordManager;
 import jdbm.RecordManagerFactory;
 import jdbm.htree.HTree;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
 public class Indexer {
     private RecordManager recordManager;
     private HTree pageTitles, pageMetadata, invertedIndex, pageLinks, pageKeywords, parentLinks;
+    private Set<String> stopwords; // Store stopwords here
+    private Porter porter = new Porter();
 
     public Indexer() {
         try {
@@ -20,6 +25,8 @@ public class Indexer {
             pageLinks = loadOrCreateHTree("pageLinks");
             pageKeywords = loadOrCreateHTree("pageKeywords");
             parentLinks = loadOrCreateHTree("parentLinks");
+
+            stopwords = loadStopwords("stopwords.txt"); // Load stopwords
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,6 +42,19 @@ public class Indexer {
             recordManager.setNamedObject(name, tree.getRecid());
             return tree;
         }
+    }
+
+    private Set<String> loadStopwords(String filename) {
+        Set<String> stopwords = new HashSet<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                stopwords.add(line.trim().toLowerCase());
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading stopwords file: " + e.getMessage());
+        }
+        return stopwords;
     }
 
     public void indexPage(String url, String title, String body, String lastModified, int size,
@@ -75,8 +95,10 @@ public class Indexer {
         String[] words = text.toLowerCase().split("\\W+");
 
         for (String word : words) {
-            word = PorterStemmer.stem(word);
-            freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
+            if (!stopwords.contains(word)) { // Ignore stopwords
+                word = porter.stripAffixes(word);
+                freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
+            }
         }
 
         return freqMap.entrySet().stream()
