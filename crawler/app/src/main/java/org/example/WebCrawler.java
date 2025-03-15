@@ -29,6 +29,7 @@ public class WebCrawler {
         while (!queue.isEmpty() && pageCount < maxPages) {
             String url = queue.poll();
             if (!visited.contains(url)) {
+                System.out.println("Processing: " + (pageCount + 1) + " / " + maxPages + " : " + url);
                 processPage(url);
                 pageCount++;
             }
@@ -37,7 +38,6 @@ public class WebCrawler {
     }
 
     private void processPage(String url) {
-        System.out.println("Processing: " + url);
         try {
             if (!shouldFetch(url))
                 return;
