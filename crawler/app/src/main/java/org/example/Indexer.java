@@ -11,22 +11,18 @@ import java.util.*;
 
 public class Indexer {
     private RecordManager recordManager;
-    private HTree pageTitles, pageMetadata, invertedIndex, pageLinks, pageKeywords, parentLinks;
-    private Set<String> stopwords; // Store stopwords here
+    private HTree pageIndex, invertedIndex;
+    private Set<String> stopwords;
     private Porter porter = new Porter();
 
     public Indexer() {
         try {
             recordManager = RecordManagerFactory.createRecordManager("search_index");
 
-            pageTitles = loadOrCreateHTree("pageTitles");
-            pageMetadata = loadOrCreateHTree("pageMetadata");
+            pageIndex = loadOrCreateHTree("pageIndex");
             invertedIndex = loadOrCreateHTree("invertedIndex");
-            pageLinks = loadOrCreateHTree("pageLinks");
-            pageKeywords = loadOrCreateHTree("pageKeywords");
-            parentLinks = loadOrCreateHTree("parentLinks");
 
-            stopwords = loadStopwords("stopwords.txt"); // Load stopwords
+            stopwords = loadStopwords("stopwords.txt");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,28 +56,31 @@ public class Indexer {
     public void indexPage(String url, String title, String body, String lastModified, int size,
             List<String> childLinks) {
         try {
-            pageTitles.put(url, title);
-            pageMetadata.put(url, lastModified + ", " + size + " bytes");
-            pageLinks.put(url, childLinks);
-
             Map<String, Integer> keywords = processKeywords(body);
-            pageKeywords.put(url, keywords);
+            String metadata = lastModified + ", " + size + " bytes";
 
+            PageData pageData = new PageData(title, metadata, keywords, childLinks, new ArrayList<>());
+            pageIndex.put(url, pageData);
+
+            // Update inverted index
             for (String word : keywords.keySet()) {
                 List<String> pages = (List<String>) invertedIndex.get(word);
                 if (pages == null)
                     pages = new ArrayList<>();
-                pages.add(url);
+                if (!pages.contains(url)) {
+                    pages.add(url);
+                }
                 invertedIndex.put(word, pages);
             }
 
             // Update parent links for all child pages
             for (String childUrl : childLinks) {
-                List<String> parents = (List<String>) parentLinks.get(childUrl);
-                if (parents == null)
-                    parents = new ArrayList<>();
-                parents.add(url);
-                parentLinks.put(childUrl, parents);
+                PageData childPage = (PageData) pageIndex.get(childUrl);
+                if (childPage == null) {
+                    childPage = new PageData("", "", new HashMap<>(), new ArrayList<>(), new ArrayList<>());
+                }
+                childPage.addParentLink(url);
+                pageIndex.put(childUrl, childPage);
             }
 
             recordManager.commit();
@@ -101,10 +100,7 @@ public class Indexer {
             }
         }
 
-        return freqMap.entrySet().stream()
-                .sorted((a, b) -> Integer.compare(b.getValue(), a.getValue()))
-                .limit(10)
-                .collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+        return freqMap; // No limit, stores all keywords
     }
 
     public void close() {
