@@ -6,7 +6,7 @@ package org.example;
 public class App {
     public static void main(String[] args) {
         String startUrl = "https://www.cse.ust.hk/~kwtleung/COMP4321/testpage.htm";
-        int maxPages = 10;
+        int maxPages = 30;
 
         WebCrawler crawler = new WebCrawler(maxPages);
         crawler.startCrawling(startUrl);
