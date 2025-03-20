@@ -11,9 +11,10 @@ import java.util.*;
 
 public class Indexer {
     private RecordManager recordManager;
-    private HTree pageIndex, invertedIndex;
+    private HTree pageIndex, invertedIndex, urlToPageId, pageIdToUrl;
     private Set<String> stopwords;
     private Porter porter = new Porter();
+    private int nextPageId = 0;
 
     public Indexer() {
         try {
@@ -21,6 +22,8 @@ public class Indexer {
 
             pageIndex = loadOrCreateHTree("pageIndex");
             invertedIndex = loadOrCreateHTree("invertedIndex");
+            urlToPageId = loadOrCreateHTree("urlToPageId");
+            pageIdToUrl = loadOrCreateHTree("pageIdToUrl");
 
             stopwords = loadStopwords("stopwords.txt");
 
@@ -54,35 +57,41 @@ public class Indexer {
     }
 
     public void indexPage(String url, String title, String body, String lastModified, int size,
-            List<String> childLinks) {
+            List<String> childPageUrls) {
         try {
             Map<String, Integer> keywords = processKeywords(body);
             String metadata = lastModified + ", " + size + " bytes";
 
-            PageData pageData = new PageData(title, metadata, keywords, childLinks, new ArrayList<>());
-            pageIndex.put(url, pageData);
+            int pageId = getPageId(url);
 
-            // Update inverted index
+            List<Integer> childPageIds = new ArrayList<>();
+            for (String childUrl : childPageUrls) {
+                int childPageId = getPageId(childUrl);
+                childPageIds.add(childPageId);
+            }
+
+            PageData pageData = new PageData(title, metadata, keywords, childPageIds, new ArrayList<>());
+            pageIndex.put(pageId, pageData);
+
             for (String word : keywords.keySet()) {
-                List<String> pages = (List<String>) invertedIndex.get(word);
+                @SuppressWarnings("unchecked")
+                List<Integer> pages = (List<Integer>) invertedIndex.get(word);
                 if (pages == null)
                     pages = new ArrayList<>();
-                if (!pages.contains(url)) {
-                    pages.add(url);
+                if (!pages.contains(pageId)) {
+                    pages.add(pageId);
                 }
                 invertedIndex.put(word, pages);
             }
 
-            // Update parent links for all child pages
-            for (String childUrl : childLinks) {
-                PageData childPage = (PageData) pageIndex.get(childUrl);
+            for (int childPageId : childPageIds) {
+                PageData childPage = (PageData) pageIndex.get(childPageId);
                 if (childPage == null) {
                     childPage = new PageData("", "", new HashMap<>(), new ArrayList<>(), new ArrayList<>());
                 }
-                childPage.addParentLink(url);
-                pageIndex.put(childUrl, childPage);
+                childPage.addParentLink(pageId);
+                pageIndex.put(childPageId, childPage);
             }
-
             recordManager.commit();
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,13 +105,32 @@ public class Indexer {
         for (String word : words) {
             if (!stopwords.contains(word)) { // Ignore stopwords
                 word = porter.stripAffixes(word);
-               if (!word.equals("")) {
-                   freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
-               }
+                if (!word.equals("")) {
+                    freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
+                }
             }
         }
 
         return freqMap; // No limit, stores all keywords
+    }
+
+    private int getPageId(String url) {
+        try {
+            Integer pageId = (Integer) urlToPageId.get(url);
+
+            if (pageId == null) {
+                pageId = nextPageId;
+                urlToPageId.put(url, pageId);
+                pageIdToUrl.put(pageId, url);
+                recordManager.commit();
+                nextPageId++;
+                return pageId;
+            }
+            return pageId;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     public void close() {
