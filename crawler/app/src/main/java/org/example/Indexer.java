@@ -96,7 +96,9 @@ public class Indexer {
         for (String word : words) {
             if (!stopwords.contains(word)) { // Ignore stopwords
                 word = porter.stripAffixes(word);
-                freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
+               if (!word.equals("")) {
+                   freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
+               }
             }
         }
 
