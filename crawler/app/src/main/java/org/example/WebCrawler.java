@@ -57,7 +57,7 @@ public class WebCrawler {
             List<String> childLinks = new ArrayList<>();
             Elements links = doc.select("a[href]");
             for (Element link : links) {
-                if (childLinks.size() >= 10)
+                if (childLinks.size() >= maxPages)
                     break;
 
                 String absUrl = link.absUrl("href");
@@ -66,7 +66,6 @@ public class WebCrawler {
                     childLinks.add(absUrl);
                 }
             }
-
             visited.add(url);
             indexer.indexPage(url, title, body, lastModified, size, childLinks);
 

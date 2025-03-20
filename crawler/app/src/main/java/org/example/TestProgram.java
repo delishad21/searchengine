@@ -31,19 +31,31 @@ public class TestProgram {
             while ((url = (String) keysIterator.next()) != null) {
                 PageData pageData = (PageData) pageIndex.get(url);
 
+                if (pageData.getTitle().equals("")) {
+                    continue;
+                }
                 output.append(pageData.getTitle()).append("\n");
                 output.append(url).append("\n");
                 output.append(pageData.getMetadata()).append("\n");
 
                 // Write keywords
+                int count = 0;
                 for (Map.Entry<String, Integer> entry : pageData.getKeywords().entrySet()) {
+                    if (count >= 10) break;
                     output.append(entry.getKey()).append(" ").append(entry.getValue()).append("; ");
+                    count++;
                 }
                 output.append("\n");
 
                 // Write child links
+                int childLinkCount = 0;
                 for (String link : pageData.getChildLinks()) {
-                    output.append(link).append("\n");
+                    if (childLinkCount < 10) {
+                        output.append(link).append("\n");
+                        childLinkCount++;
+                    } else {
+                        break;
+                    }
                 }
 
                 output.append("-------------------------------\n");
