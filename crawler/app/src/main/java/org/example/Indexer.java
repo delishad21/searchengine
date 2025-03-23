@@ -59,7 +59,8 @@ public class Indexer {
     public void indexPage(String url, String title, String body, String lastModified, int size,
             List<String> childPageUrls) {
         try {
-            Map<String, Integer> keywords = processKeywords(body);
+            Map<String, Integer> keywords = processKeywords(title + " " + body);
+            title = processTitle(title);
             String metadata = lastModified + ", " + size + " bytes";
 
             int pageId = getPageId(url);
@@ -112,6 +113,23 @@ public class Indexer {
         }
 
         return freqMap; // No limit, stores all keywords
+    }
+
+    private String processTitle(String text) {
+        StringBuilder titleBuilder = new StringBuilder();
+        String[] words = text.toLowerCase().split("\\W+");
+
+        for (String word : words) {
+            if (!stopwords.contains(word)) { // Ignore stopwords
+                word = porter.stripAffixes(word); // Apply Porter stemming
+                if (!word.equals("")) {
+                    titleBuilder.append(word).append(" "); // Append the processed word
+                }
+            }
+        }
+
+        // Remove the trailing space before returning the result
+        return titleBuilder.toString().trim();
     }
 
     private int getPageId(String url) {
