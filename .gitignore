@@ -5,3 +5,8 @@ crawler/.idea/misc.xml
 crawler/.idea/vcs.xml
 .vscode
 .venv
+
+search_index.db
+search_index.log
+spider_result.txt
+__pycache__
