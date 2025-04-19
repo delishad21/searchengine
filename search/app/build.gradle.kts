@@ -6,8 +6,10 @@
  */
 
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
     application
+    id ("java")
+    id("org.springframework.boot") version "3.2.2"
+    id("io.spring.dependency-management") version "1.1.3"
 }
 
 repositories {
@@ -16,19 +18,17 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit test framework.
-    testImplementation(libs.junit)
-
-    // This dependency is used by the application.
-    implementation(libs.guava)
+    implementation ("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter")
 
     implementation("org.htmlparser:htmlparser:2.1")
-
     implementation("jdbm:jdbm:1.0")
-
     implementation("org.jsoup:jsoup:1.15.4")
 
+    implementation("com.google.guava:guava:32.1.2-jre") // or latest
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0") // or latest
 }
+
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
@@ -39,5 +39,5 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.crawler.App"
+    mainClass = "org.search.App"
 }

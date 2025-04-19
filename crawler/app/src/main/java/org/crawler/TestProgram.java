@@ -1,4 +1,4 @@
-package org.example;
+package org.crawler;
 
 import jdbm.RecordManager;
 import jdbm.RecordManagerFactory;
@@ -16,7 +16,7 @@ public class TestProgram {
 
     public void generateReport() {
         try {
-            RecordManager recordManager = RecordManagerFactory.createRecordManager("search_index");
+            RecordManager recordManager = RecordManagerFactory.createRecordManager("../../search_index");
             HTree pageIndex = loadHTree(recordManager, "pageIndex");
             HTree pageIdToUrl = loadHTree(recordManager, "pageIdToUrl");
 
@@ -29,7 +29,8 @@ public class TestProgram {
             FastIterator keysIterator = pageIndex.keys();
             Integer pageId;
 
-//            while ((url = (String) pageIdToUrl.get((Integer) keysIterator.next())) != null) {
+            // while ((url = (String) pageIdToUrl.get((Integer) keysIterator.next())) !=
+            // null) {
             while ((pageId = (Integer) keysIterator.next()) != null) {
                 PageData pageData = (PageData) pageIndex.get(pageId);
 
@@ -66,7 +67,7 @@ public class TestProgram {
                 output.append("-------------------------------\n");
             }
 
-            try (FileWriter writer = new FileWriter("spider_result.txt")) {
+            try (FileWriter writer = new FileWriter("../../spider_result.txt")) {
                 writer.write(output.toString());
             }
 

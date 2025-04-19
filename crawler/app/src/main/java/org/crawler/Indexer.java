@@ -1,4 +1,4 @@
-package org.example;
+package org.crawler;
 
 import jdbm.RecordManager;
 import jdbm.RecordManagerFactory;
@@ -18,7 +18,7 @@ public class Indexer {
 
     public Indexer() {
         try {
-            recordManager = RecordManagerFactory.createRecordManager("search_index");
+            recordManager = RecordManagerFactory.createRecordManager("../../search_index");
 
             pageIndex = loadOrCreateHTree("pageIndex");
             invertedIndex = loadOrCreateHTree("invertedIndex");

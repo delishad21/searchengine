@@ -1,4 +1,4 @@
-package org.example;
+package org.search;
 
 import java.io.Serializable;
 import java.util.List;
