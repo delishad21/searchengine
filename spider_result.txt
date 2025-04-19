@@ -1,0 +1,176 @@
+Test page
+https://www.cse.ust.hk/~kwtleung/COMP4321/testpage.htm
+Tue May 16 13:03:16 SGT 2023, 186 bytes
+new 1; read 1; intern 1; test 2; movi 1; book 1; list 1; admis 1; crawler 1; cse 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/books.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie.htm
+-------------------------------
+CSE department of HKUST
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse.htm
+Tue May 16 13:03:16 SGT 2023, 62 bytes
+admis 2; ug 1; cse 2; pg 1; hkust 2; main 1; depart 2; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/PG.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/UG.htm
+-------------------------------
+News
+https://www.cse.ust.hk/~kwtleung/COMP4321/news.htm
+Tue May 16 13:03:16 SGT 2023, 35 bytes
+new 4; bbc 1; cnn 1; main 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn.htm
+-------------------------------
+books
+https://www.cse.ust.hk/~kwtleung/COMP4321/books.htm
+Tue May 16 13:03:16 SGT 2023, 195 bytes
+note 1; read 1; inform 1; data 1; gener 1; book 2; main 1; articl 1; readabl 1; autom 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book1.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book2.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book3.htm
+-------------------------------
+Movie Index Page
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie.htm
+Tue May 16 13:09:22 SGT 2023, 8166 bytes
+boyz 1; ultim 1; bad 1; musiqu 1; complet 2; bam 1; satan 1; algier 1; bat 1; record 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/1.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/2.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/3.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/4.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/5.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/6.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/7.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/8.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/9.html
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/10.html
+-------------------------------
+PG
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/PG.htm
+Tue May 16 13:03:46 SGT 2023, 2648 bytes
+individu 1; inform 1; toefl 1; degre 2; defici 1; institu 1; program 8; complet 2; academ 2; analysi 1; 
+-------------------------------
+UG
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/UG.htm
+Tue May 16 13:03:46 SGT 2023, 3058 bytes
+inform 4; shift 1; degre 2; focus 1; convers 1; program 16; complet 1; oversea 2; offer 3; beng 3; 
+-------------------------------
+BBC news
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc.htm
+Tue May 16 13:03:44 SGT 2023, 111 bytes
+new 3; blackburn 1; bbc 2; mp 1; commit 1; project 1; nest 1; urg 1; 1 1; bt 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc1.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc2.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc3.htm
+-------------------------------
+CNN news
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn.htm
+Tue May 16 13:03:44 SGT 2023, 98 bytes
+new 3; cnn 2; accordion 1; warm 1; caus 1; sauerkraut 1; econom 1; sweet 1; capit 1; chao 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn1.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn2.htm
+-------------------------------
+book1
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book1.htm
+Tue May 16 13:03:16 SGT 2023, 1271 bytes
+justif 1; reason 1; inform 3; justifi 1; reader 1; subject 1; precision 1; atten 1; elementari 1; main 2; 
+-------------------------------
+book2
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book2.htm
+Tue May 16 13:03:16 SGT 2023, 1682 bytes
+inform 5; data 11; prepar 1; nonbibliograph 1; research 1; consist 1; concern 2; environ 1; via 1; 1974 1; 
+-------------------------------
+book3
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book3.htm
+Tue May 16 13:03:16 SGT 2023, 1554 bytes
+individu 1; inform 2; formul 1; depend 1; subject 2; shift 1; degre 1; cover 1; mathemat 6; fix 1; 
+-------------------------------
+Dinosaur Planet (2003)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/1.html
+Tue May 16 13:03:16 SGT 2023, 2853 bytes
+copyright 1; bio 1; dragon 1; reich 1; plai 2; der 1; denver 1; dvd 1; displai 3; giant 5; 
+-------------------------------
+Isle of Man TT 2004 Review (2004)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/2.html
+Tue May 16 13:03:26 SGT 2023, 2195 bytes
+copyright 1; arsen 1; bio 1; plai 2; dvd 1; review 11; displai 1; season 3; 93 1; 94 1; 
+-------------------------------
+Character (1997)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/3.html
+Tue May 16 13:03:36 SGT 2023, 3216 bytes
+housekeep 1; copyright 1; juen 1; told 1; carrol 1; bio 1; jenk 1; del 1; karakt 1; plai 3; 
+-------------------------------
+Paula Abdul's Get Up and Dance (1994)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/4.html
+Tue May 16 13:03:38 SGT 2023, 2122 bytes
+copyright 1; bio 1; complet 1; plai 2; dvd 1; displai 2; episod 5; addition 2; lesson 1; 1990 1; 
+-------------------------------
+The Rise and Fall of ECW (2004)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/5.html
+Tue May 16 13:03:38 SGT 2023, 3184 bytes
+copyright 1; cultur 1; bio 1; american 4; jim 1; plai 2; 1975 1; bar 1; dvd 1; 1972 1; 
+-------------------------------
+Sick (1997)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/6.html
+Tue May 16 13:03:40 SGT 2023, 4335 bytes
+caught 1; dvd 1; poor 1; zhoro 1; english 3; friend 1; volum 2; killer 1; angri 1; addition 2; 
+-------------------------------
+8 Man (1992)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/7.html
+Tue May 16 13:03:40 SGT 2023, 2741 bytes
+88 1; 13th 1; copyright 1; 08 1; bio 1; plai 2; 1976 1; dvd 1; displai 3; ten 1; 
+-------------------------------
+What the #$*! Do We Know!? (2004)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/8.html
+Tue May 16 13:03:42 SGT 2023, 3358 bytes
+13th 1; copyright 1; inform 1; bio 1; thirteenth 1; hei 1; plai 2; der 1; dvd 1; 1971 1; 
+-------------------------------
+Class of Nuke 'Em High 2 (1991)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/9.html
+Tue May 16 13:03:44 SGT 2023, 6013 bytes
+hotmail 1; malathion 1; gotten 1; bad 1; commentsextern 1; factori 1; dvd 2; yok 3; louzil 1; sci 1; 
+-------------------------------
+Fighter (2001)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/10.html
+Tue May 16 13:03:16 SGT 2023, 11389 bytes
+plane 2; shaolin 2; ultim 5; japanes 1; dei 1; den 1; moyu 1; drunk 1; bar 1; sci 1; 
+-------------------------------
+Full Frame: Documentary Shorts (1999)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/11.html
+Tue May 16 13:03:18 SGT 2023, 2032 bytes
+trier 1; copyright 1; bio 1; american 2; plai 2; dvd 1; displai 1; episod 5; addition 2; dogumentari 1; 
+-------------------------------
+My Favorite Brunette (1947)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/12.html
+Tue May 16 13:03:18 SGT 2023, 5360 bytes
+plane 1; doran 1; bring 1; complet 1; commentsextern 1; businessreleas 1; offer 1; dvd 4; record 1; english 1; 
+-------------------------------
+Lord of the Rings: The Return of the King: Extended Edition: Bonus Material (2003)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/13.html
+Tue May 16 13:03:20 SGT 2023, 2289 bytes
+copyright 1; ring 8; nation 1; bio 1; beyond 1; plai 2; dvd 1; displai 1; episod 5; addition 2; 
+-------------------------------
+Nature: Antarctica (1982)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/14.html
+Tue May 16 13:03:20 SGT 2023, 2964 bytes
+copyright 1; cultur 1; japan 1; japanes 1; bio 1; icebreak 1; retrospect 1; plai 2; gwar 1; dvd 1; 
+-------------------------------
+Neil Diamond: Greatest Hits Live (1988)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/15.html
+Tue May 16 13:03:20 SGT 2023, 4419 bytes
+reason 1; stupid 1; monterei 1; concert 7; commentsextern 1; denver 1; dvd 2; music 2; fabul 1; audienc 2; 
+-------------------------------
+Screamers (1996)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/16.html
+Tue May 16 13:03:22 SGT 2023, 2978 bytes
+13th 1; copyright 1; uomini 1; bio 1; scream 8; thirteenth 1; plai 2; dvd 1; children 2; 1970 1; 
+-------------------------------
+7 Seconds (2005)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/17.html
+Tue May 16 13:03:22 SGT 2023, 2783 bytes
+01 1; septemb 2; copyright 1; bio 1; 09 1; thirti 1; plai 2; sloppi 1; 1974 1; dvd 1; 
+-------------------------------
+Immortal Beloved (1994)
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie/18.html
+Tue May 16 13:03:24 SGT 2023, 6456 bytes
+romeo 1; holzmatthew 1; commentsextern 1; businessreleas 1; via 1; johann 1; music 6; barri 1; favorit 1; mozart 1; 
+-------------------------------

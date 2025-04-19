@@ -8,7 +8,7 @@
 
 */
 
-package org.example;
+package org.crawler;
 
 import java.io.*;
 
