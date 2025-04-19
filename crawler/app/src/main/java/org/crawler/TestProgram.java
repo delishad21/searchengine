@@ -15,11 +15,11 @@ public class TestProgram {
             StringBuilder output = new StringBuilder();
 
             // Query for pages
-            String pageQuery = "SELECT id, title, metadata FROM pages WHERE title != ''";
+            String pageQuery = "SELECT id, original_title, metadata FROM pages WHERE original_title != ''";
             try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(pageQuery)) {
                 while (rs.next()) {
                     int pageId = rs.getInt("id");
-                    String title = rs.getString("title");
+                    String title = rs.getString("original_title");
                     String metadata = rs.getString("metadata");
 
                     output.append(title).append("\n");

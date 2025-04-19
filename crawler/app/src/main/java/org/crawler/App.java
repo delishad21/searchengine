@@ -5,15 +5,15 @@ package org.crawler;
 
 public class App {
     public static void main(String[] args) {
-        // String startUrl = "https://www.cse.ust.hk/~kwtleung/COMP4321/testpage.htm";
-        // int maxPages = 30;
+        String startUrl = "https://www.cse.ust.hk/~kwtleung/COMP4321/testpage.htm";
+        int maxPages = 300; // As per final requirement
 
-        // WebCrawler crawler = new WebCrawler(maxPages);
-        // crawler.startCrawling(startUrl);
+        WebCrawler crawler = new WebCrawler(maxPages);
+        crawler.startCrawling(startUrl);
 
-        // // Close indexer to save data
-        // Indexer indexer = new Indexer();
-        // indexer.close();
+        // Close indexer to save data
+        Indexer indexer = new Indexer();
+        indexer.close();
 
         // Generate report
         TestProgram.main(args);

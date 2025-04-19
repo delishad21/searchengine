@@ -23,7 +23,8 @@ public class Indexer {
 
     private void createTables() throws SQLException {
         Statement stmt = conn.createStatement();
-        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS pages (id INTEGER PRIMARY KEY, title TEXT, metadata TEXT)");
+        stmt.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS pages (id INTEGER PRIMARY KEY, original_title TEXT, stemmed_title TEXT, metadata TEXT)");
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS keywords (word TEXT, page_id INTEGER, frequency INTEGER)");
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS urls (url TEXT PRIMARY KEY, page_id INTEGER)");
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS links (parent_id INTEGER, child_id INTEGER)");
@@ -56,11 +57,10 @@ public class Indexer {
             List<String> childPageUrls) {
         try {
             Map<String, Integer> keywords = processKeywords(title + " " + body);
-            title = processTitle(title);
             String metadata = lastModified + ", " + size + " bytes";
             int pageId = getOrCreatePageId(url);
 
-            insertPage(pageId, title, metadata);
+            insertPage(pageId, title, processTitle(title), metadata);
             insertKeywords(pageId, keywords);
 
             List<Integer> childPageIds = new ArrayList<>();
@@ -101,12 +101,14 @@ public class Indexer {
         return pageId;
     }
 
-    private void insertPage(int pageId, String title, String metadata) throws SQLException {
-        PreparedStatement stmt = conn
-                .prepareStatement("INSERT OR REPLACE INTO pages (id, title, metadata) VALUES (?, ?, ?)");
+    private void insertPage(int pageId, String originalTitle, String stemmedTitle, String metadata)
+            throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(
+                "INSERT OR REPLACE INTO pages (id, original_title, stemmed_title, metadata) VALUES (?, ?, ?, ?)");
         stmt.setInt(1, pageId);
-        stmt.setString(2, title);
-        stmt.setString(3, metadata);
+        stmt.setString(2, originalTitle);
+        stmt.setString(3, stemmedTitle);
+        stmt.setString(4, metadata);
         stmt.executeUpdate();
         stmt.close();
     }

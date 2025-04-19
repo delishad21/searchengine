@@ -10,9 +10,9 @@ def search(query, db_path="../search_index.db", max_results=50):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    # Step 1: Get term frequencies
-    term_docs = {}  # word -> list of (page_id, freq)
-    doc_freq = {}   # word -> df
+    # Get term frequencies
+    term_docs = {}
+    doc_freq = {}
 
     for term in terms:
         cursor.execute("SELECT page_id, frequency FROM keywords WHERE word = ?", (term,))
@@ -20,7 +20,6 @@ def search(query, db_path="../search_index.db", max_results=50):
         term_docs[term] = results
         doc_freq[term] = len(set(r["page_id"] for r in results))
 
-    # Step 2: Build document vectors
     doc_vectors = {}
     doc_max_tf = {}
 
@@ -44,7 +43,6 @@ def search(query, db_path="../search_index.db", max_results=50):
             doc_vec.append(tfidf)
             query_vec.append(1)
 
-        # Cosine similarity
         dot_product = sum(a * b for a, b in zip(doc_vec, query_vec))
         norm_doc = math.sqrt(sum(a * a for a in doc_vec))
         norm_query = math.sqrt(len(query_vec))
@@ -54,19 +52,15 @@ def search(query, db_path="../search_index.db", max_results=50):
 
         score = dot_product / (norm_doc * norm_query)
 
-        # Phrase boost
-        cursor.execute("SELECT title, metadata FROM pages WHERE id = ?", (pid,))
+        # Title match boost (use stemmed_title)
+        cursor.execute("SELECT stemmed_title FROM pages WHERE id = ?", (pid,))
         title_row = cursor.fetchone()
-        title = title_row["title"]
+        stemmed_title = title_row["stemmed_title"]
 
-        # Title match boost
-        if any(term in title for term in terms):
+        if any(term in stemmed_title for term in terms):
             score *= 1.5
 
-        # Phrase match boost
-        cursor.execute("SELECT url FROM urls WHERE page_id = ?", (pid,))
-        url = cursor.fetchone()["url"]
-
+        # Phrase boost
         cursor.execute("SELECT GROUP_CONCAT(word, ' ') as full_text FROM keywords WHERE page_id = ?", (pid,))
         text = cursor.fetchone()["full_text"] or ""
 
@@ -76,14 +70,13 @@ def search(query, db_path="../search_index.db", max_results=50):
 
         scores[pid] = score
 
-    # Step 3: Get top results
     top_pages = sorted(scores.items(), key=lambda x: -x[1])[:max_results]
     results = []
 
     for pid, score in top_pages:
-        cursor.execute("SELECT title, metadata FROM pages WHERE id = ?", (pid,))
+        cursor.execute("SELECT original_title, metadata FROM pages WHERE id = ?", (pid,))
         page = cursor.fetchone()
-        title = page["title"]
+        title = page["original_title"]
         metadata = page["metadata"]
 
         cursor.execute("SELECT url FROM urls WHERE page_id = ?", (pid,))
@@ -92,11 +85,21 @@ def search(query, db_path="../search_index.db", max_results=50):
         cursor.execute("SELECT word, frequency FROM keywords WHERE page_id = ? ORDER BY frequency DESC LIMIT 5", (pid,))
         keywords = cursor.fetchall()
 
-        cursor.execute("SELECT parent_id FROM links WHERE child_id = ?", (pid,))
-        parents = [row["parent_id"] for row in cursor.fetchall()]
+        # Get parent links as URLs
+        cursor.execute("""
+            SELECT u.url FROM links l
+            JOIN urls u ON l.parent_id = u.page_id
+            WHERE l.child_id = ?
+        """, (pid,))
+        parents = [row["url"] for row in cursor.fetchall()]
 
-        cursor.execute("SELECT child_id FROM links WHERE parent_id = ?", (pid,))
-        children = [row["child_id"] for row in cursor.fetchall()]
+        # Get child links as URLs
+        cursor.execute("""
+            SELECT u.url FROM links l
+            JOIN urls u ON l.child_id = u.page_id
+            WHERE l.parent_id = ?
+        """, (pid,))
+        children = [row["url"] for row in cursor.fetchall()]
 
         results.append({
             "score": round(score, 4),
