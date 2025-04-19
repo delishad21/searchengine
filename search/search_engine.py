@@ -4,7 +4,7 @@ from utils import process_text, extract_phrases_and_terms, load_stopwords, token
 
 stopwords = load_stopwords()
 
-def search(query, db_path="../search_index.db", max_results=50):
+def search(query, db_path="../search_index.db", max_results=50): # max 50 results as defined for final submission
     phrases, terms = extract_phrases_and_terms(query)
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
