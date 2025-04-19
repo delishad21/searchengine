@@ -25,7 +25,8 @@ public class Indexer {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS pages (id INTEGER PRIMARY KEY, original_title TEXT, stemmed_title TEXT, metadata TEXT)");
-        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS keywords (word TEXT, page_id INTEGER, frequency INTEGER)");
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS keywords (word TEXT, page_id INTEGER, frequency INTEGER)"); // Inverted
+                                                                                                                   // index
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS urls (url TEXT PRIMARY KEY, page_id INTEGER)");
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS links (parent_id INTEGER, child_id INTEGER)");
         stmt.close();
