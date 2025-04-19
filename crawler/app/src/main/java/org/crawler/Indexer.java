@@ -1,46 +1,42 @@
 package org.crawler;
 
-import jdbm.RecordManager;
-import jdbm.RecordManagerFactory;
-import jdbm.htree.HTree;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.sql.*;
 import java.util.*;
+import java.io.*;
 
 public class Indexer {
-    private RecordManager recordManager;
-    private HTree pageIndex, invertedIndex, urlToPageId, pageIdToUrl;
+    private Connection conn;
     private Set<String> stopwords;
     private Porter porter = new Porter();
     private int nextPageId = 0;
 
     public Indexer() {
         try {
-            recordManager = RecordManagerFactory.createRecordManager("../../search_index");
-
-            pageIndex = loadOrCreateHTree("pageIndex");
-            invertedIndex = loadOrCreateHTree("invertedIndex");
-            urlToPageId = loadOrCreateHTree("urlToPageId");
-            pageIdToUrl = loadOrCreateHTree("pageIdToUrl");
-
+            conn = DriverManager.getConnection("jdbc:sqlite:../../search_index.db");
+            createTables();
             stopwords = loadStopwords("stopwords.txt");
-
-        } catch (IOException e) {
+            nextPageId = getMaxPageId() + 1;
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private HTree loadOrCreateHTree(String name) throws IOException {
-        long recId = recordManager.getNamedObject(name);
-        if (recId != 0) {
-            return HTree.load(recordManager, recId);
-        } else {
-            HTree tree = HTree.createInstance(recordManager);
-            recordManager.setNamedObject(name, tree.getRecid());
-            return tree;
-        }
+    private void createTables() throws SQLException {
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS pages (id INTEGER PRIMARY KEY, title TEXT, metadata TEXT)");
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS keywords (word TEXT, page_id INTEGER, frequency INTEGER)");
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS urls (url TEXT PRIMARY KEY, page_id INTEGER)");
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS links (parent_id INTEGER, child_id INTEGER)");
+        stmt.close();
+    }
+
+    private int getMaxPageId() throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT MAX(id) FROM pages");
+        int max = rs.next() ? rs.getInt(1) : -1;
+        rs.close();
+        stmt.close();
+        return max;
     }
 
     private Set<String> loadStopwords(String filename) {
@@ -51,7 +47,7 @@ public class Indexer {
                 stopwords.add(line.trim().toLowerCase());
             }
         } catch (IOException e) {
-            System.out.println("Error loading stopwords file: " + e.getMessage());
+            System.out.println("Stopwords file missing: " + e.getMessage());
         }
         return stopwords;
     }
@@ -62,41 +58,80 @@ public class Indexer {
             Map<String, Integer> keywords = processKeywords(title + " " + body);
             title = processTitle(title);
             String metadata = lastModified + ", " + size + " bytes";
+            int pageId = getOrCreatePageId(url);
 
-            int pageId = getPageId(url);
+            insertPage(pageId, title, metadata);
+            insertKeywords(pageId, keywords);
 
             List<Integer> childPageIds = new ArrayList<>();
             for (String childUrl : childPageUrls) {
-                int childPageId = getPageId(childUrl);
+                int childPageId = getOrCreatePageId(childUrl);
+                insertLink(pageId, childPageId);
                 childPageIds.add(childPageId);
             }
 
-            PageData pageData = new PageData(title, metadata, keywords, childPageIds, new ArrayList<>());
-            pageIndex.put(pageId, pageData);
-
-            for (String word : keywords.keySet()) {
-                @SuppressWarnings("unchecked")
-                List<Integer> pages = (List<Integer>) invertedIndex.get(word);
-                if (pages == null)
-                    pages = new ArrayList<>();
-                if (!pages.contains(pageId)) {
-                    pages.add(pageId);
-                }
-                invertedIndex.put(word, pages);
-            }
-
-            for (int childPageId : childPageIds) {
-                PageData childPage = (PageData) pageIndex.get(childPageId);
-                if (childPage == null) {
-                    childPage = new PageData("", "", new HashMap<>(), new ArrayList<>(), new ArrayList<>());
-                }
-                childPage.addParentLink(pageId);
-                pageIndex.put(childPageId, childPage);
-            }
-            recordManager.commit();
-        } catch (IOException e) {
+            // conn.commit(); Auto commit is already on
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private int getOrCreatePageId(String url) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("SELECT page_id FROM urls WHERE url = ?");
+        stmt.setString(1, url);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            int id = rs.getInt(1);
+            rs.close();
+            stmt.close();
+            return id;
+        }
+
+        int pageId = nextPageId++;
+        rs.close();
+        stmt.close();
+
+        PreparedStatement insert = conn.prepareStatement("INSERT INTO urls (url, page_id) VALUES (?, ?)");
+        insert.setString(1, url);
+        insert.setInt(2, pageId);
+        insert.executeUpdate();
+        insert.close();
+
+        return pageId;
+    }
+
+    private void insertPage(int pageId, String title, String metadata) throws SQLException {
+        PreparedStatement stmt = conn
+                .prepareStatement("INSERT OR REPLACE INTO pages (id, title, metadata) VALUES (?, ?, ?)");
+        stmt.setInt(1, pageId);
+        stmt.setString(2, title);
+        stmt.setString(3, metadata);
+        stmt.executeUpdate();
+        stmt.close();
+    }
+
+    private void insertKeywords(int pageId, Map<String, Integer> keywords) throws SQLException {
+        PreparedStatement stmt = conn
+                .prepareStatement("INSERT INTO keywords (word, page_id, frequency) VALUES (?, ?, ?)");
+
+        for (Map.Entry<String, Integer> entry : keywords.entrySet()) {
+            stmt.setString(1, entry.getKey());
+            stmt.setInt(2, pageId);
+            stmt.setInt(3, entry.getValue());
+            stmt.addBatch();
+        }
+
+        stmt.executeBatch();
+        stmt.close();
+    }
+
+    private void insertLink(int parentId, int childId) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO links (parent_id, child_id) VALUES (?, ?)");
+        stmt.setInt(1, parentId);
+        stmt.setInt(2, childId);
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     private Map<String, Integer> processKeywords(String text) {
@@ -104,58 +139,35 @@ public class Indexer {
         String[] words = text.toLowerCase().split("\\W+");
 
         for (String word : words) {
-            if (!stopwords.contains(word)) { // Ignore stopwords
+            if (!stopwords.contains(word)) {
                 word = porter.stripAffixes(word);
-                if (!word.equals("")) {
+                if (!word.isEmpty()) {
                     freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
                 }
             }
         }
-
-        return freqMap; // No limit, stores all keywords
+        return freqMap;
     }
 
     private String processTitle(String text) {
-        StringBuilder titleBuilder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         String[] words = text.toLowerCase().split("\\W+");
 
         for (String word : words) {
-            if (!stopwords.contains(word)) { // Ignore stopwords
-                word = porter.stripAffixes(word); // Apply Porter stemming
-                if (!word.equals("")) {
-                    titleBuilder.append(word).append(" "); // Append the processed word
+            if (!stopwords.contains(word)) {
+                word = porter.stripAffixes(word);
+                if (!word.isEmpty()) {
+                    builder.append(word).append(" ");
                 }
             }
         }
-
-        // Remove the trailing space before returning the result
-        return titleBuilder.toString().trim();
-    }
-
-    private int getPageId(String url) {
-        try {
-            Integer pageId = (Integer) urlToPageId.get(url);
-
-            if (pageId == null) {
-                pageId = nextPageId;
-                urlToPageId.put(url, pageId);
-                pageIdToUrl.put(pageId, url);
-                recordManager.commit();
-                nextPageId++;
-                return pageId;
-            }
-            return pageId;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return -1;
-        }
+        return builder.toString().trim();
     }
 
     public void close() {
         try {
-            recordManager.commit();
-            recordManager.close();
-        } catch (IOException e) {
+            conn.close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

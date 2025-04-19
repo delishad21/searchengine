@@ -6,18 +6,26 @@ https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/news.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/books.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/Movie.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/books.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/Movie.htm
 -------------------------------
 cse depart hkust
 https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse.htm
 Tue May 16 13:03:16 SGT 2023, 62 bytes
-admis 2; ug 1; cse 2; pg 1; hkust 2; main 1; depart 2; 
+admis 2; ug 1; cse 2; pg 1; hkust 2; main 1; depart 2; admis 2; ug 1; cse 2; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/PG.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/UG.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/PG.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/ust_cse/UG.htm
 -------------------------------
 new
 https://www.cse.ust.hk/~kwtleung/COMP4321/news.htm
 Tue May 16 13:03:16 SGT 2023, 35 bytes
-new 4; bbc 1; cnn 1; main 1; 
+new 4; bbc 1; cnn 1; main 1; new 4; bbc 1; cnn 1; main 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn.htm
 -------------------------------
@@ -25,6 +33,9 @@ book
 https://www.cse.ust.hk/~kwtleung/COMP4321/books.htm
 Tue May 16 13:03:16 SGT 2023, 195 bytes
 note 1; read 1; inform 1; data 1; gener 1; book 2; main 1; articl 1; readabl 1; autom 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book1.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book2.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/books/book3.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/books/book1.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/books/book2.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/books/book3.htm
@@ -61,11 +72,16 @@ new 3; blackburn 1; bbc 2; mp 1; commit 1; project 1; nest 1; urg 1; 1 1; bt 1;
 https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc1.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc2.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc3.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc1.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc2.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/bbc3.htm
 -------------------------------
 cnn new
 https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn.htm
 Tue May 16 13:03:44 SGT 2023, 98 bytes
 new 3; cnn 2; accordion 1; warm 1; caus 1; sauerkraut 1; econom 1; sweet 1; capit 1; chao 1; 
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn1.htm
+https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn2.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn1.htm
 https://www.cse.ust.hk/~kwtleung/COMP4321/news/cnn2.htm
 -------------------------------

@@ -27,6 +27,7 @@ dependencies {
     implementation("jdbm:jdbm:1.0")
 
     implementation("org.jsoup:jsoup:1.15.4")
+    implementation("org.xerial:sqlite-jdbc:3.42.0.0")
 
 }
 

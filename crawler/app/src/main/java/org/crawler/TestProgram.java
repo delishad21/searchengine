@@ -1,13 +1,8 @@
 package org.crawler;
 
-import jdbm.RecordManager;
-import jdbm.RecordManagerFactory;
-import jdbm.helper.FastIterator;
-import jdbm.htree.HTree;
-
+import java.sql.*;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
 
 public class TestProgram {
     public static void main(String[] args) {
@@ -15,71 +10,89 @@ public class TestProgram {
     }
 
     public void generateReport() {
-        try {
-            RecordManager recordManager = RecordManagerFactory.createRecordManager("../../search_index");
-            HTree pageIndex = loadHTree(recordManager, "pageIndex");
-            HTree pageIdToUrl = loadHTree(recordManager, "pageIdToUrl");
-
-            if (pageIndex == null) {
-                System.out.println("Error: HTree structure failed to load.");
-                return;
-            }
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../../search_index.db")) {
 
             StringBuilder output = new StringBuilder();
-            FastIterator keysIterator = pageIndex.keys();
-            Integer pageId;
 
-            // while ((url = (String) pageIdToUrl.get((Integer) keysIterator.next())) !=
-            // null) {
-            while ((pageId = (Integer) keysIterator.next()) != null) {
-                PageData pageData = (PageData) pageIndex.get(pageId);
+            // Query for pages
+            String pageQuery = "SELECT id, title, metadata FROM pages WHERE title != ''";
+            try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(pageQuery)) {
+                while (rs.next()) {
+                    int pageId = rs.getInt("id");
+                    String title = rs.getString("title");
+                    String metadata = rs.getString("metadata");
 
-                if (pageData.getTitle().equals("")) {
-                    continue;
-                }
-                output.append(pageData.getTitle()).append("\n");
-                String url = (String) pageIdToUrl.get(pageId);
-                output.append(url).append("\n");
-                output.append(pageData.getMetadata()).append("\n");
+                    output.append(title).append("\n");
 
-                // Write keywords
-                int count = 0;
-                for (Map.Entry<String, Integer> entry : pageData.getKeywords().entrySet()) {
-                    if (count >= 10)
-                        break;
-                    output.append(entry.getKey()).append(" ").append(entry.getValue()).append("; ");
-                    count++;
-                }
-                output.append("\n");
-
-                // Write child links
-                int childLinkCount = 0;
-                for (int linkId : pageData.getChildLinks()) {
-                    String link = (String) pageIdToUrl.get(linkId);
-                    if (childLinkCount < 10) {
-                        output.append(link).append("\n");
-                        childLinkCount++;
-                    } else {
-                        break;
+                    // Query URL by pageId
+                    String urlQuery = "SELECT url FROM urls WHERE page_id = ?";
+                    try (PreparedStatement psUrl = conn.prepareStatement(urlQuery)) {
+                        psUrl.setInt(1, pageId);
+                        try (ResultSet urlRs = psUrl.executeQuery()) {
+                            if (urlRs.next()) {
+                                String url = urlRs.getString("url");
+                                output.append(url).append("\n");
+                            }
+                        }
                     }
-                }
 
-                output.append("-------------------------------\n");
+                    output.append(metadata).append("\n");
+
+                    // Write keywords
+                    String keywordsQuery = "SELECT word, frequency FROM keywords WHERE page_id = ?";
+                    try (PreparedStatement psKeywords = conn.prepareStatement(keywordsQuery)) {
+                        psKeywords.setInt(1, pageId);
+                        try (ResultSet keywordsRs = psKeywords.executeQuery()) {
+                            int count = 0;
+                            while (keywordsRs.next() && count < 10) {
+                                String keyword = keywordsRs.getString("word");
+                                int frequency = keywordsRs.getInt("frequency");
+                                output.append(keyword).append(" ").append(frequency)
+                                        .append("; ");
+                                count++;
+                            }
+                        }
+                    }
+                    output.append("\n");
+
+                    // Write child links
+                    String childLinksQuery = "SELECT child_id FROM links WHERE parent_id = ?";
+                    try (PreparedStatement psChildLinks = conn.prepareStatement(childLinksQuery)) {
+                        psChildLinks.setInt(1, pageId);
+                        try (ResultSet childLinksRs = psChildLinks.executeQuery()) {
+                            int childLinkCount = 0;
+                            while (childLinksRs.next() && childLinkCount < 10) {
+                                int childPageId = childLinksRs.getInt("child_id");
+
+                                // Query URL for childPageId
+                                String childUrlQuery = "SELECT url FROM urls WHERE page_id = ?";
+                                try (PreparedStatement psChildUrl = conn.prepareStatement(childUrlQuery)) {
+                                    psChildUrl.setInt(1, childPageId);
+                                    try (ResultSet childUrlRs = psChildUrl.executeQuery()) {
+                                        if (childUrlRs.next()) {
+                                            String childUrl = childUrlRs.getString("url");
+                                            output.append("").append(childUrl).append("\n");
+                                            childLinkCount++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    output.append("-------------------------------\n");
+                }
             }
 
+            // Write output to file
             try (FileWriter writer = new FileWriter("../../spider_result.txt")) {
                 writer.write(output.toString());
             }
 
             System.out.println("Report generated: spider_result.txt");
-            recordManager.close();
-        } catch (Exception e) {
+
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private HTree loadHTree(RecordManager recordManager, String name) throws IOException {
-        long recId = recordManager.getNamedObject(name);
-        return recId == 0 ? null : HTree.load(recordManager, recId);
     }
 }
