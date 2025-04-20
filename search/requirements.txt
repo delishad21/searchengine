@@ -1,2 +1,5 @@
 Flask
 nltk
+Flask-Cors
+beautifulsoup4
+requests

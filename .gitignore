@@ -10,3 +10,10 @@ search_index.db
 search_index.log
 spider_result.txt
 __pycache__
+search/exported_tables.xlsx
+search/exported_tables/keywords.csv
+search/exported_tables/links.csv
+search/exported_tables/pages.csv
+search/exported_tables/urls.csv
+search/test.py
+search/~$exported_tables.xlsx
