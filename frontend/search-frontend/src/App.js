@@ -987,7 +987,7 @@ export default function SearchEngine() {
                                       {item.title.substring(0, 30)}...
                                     </Typography>
                                     <Typography variant="body2">
-                                      {(item.score * 100).toFixed(1)}%
+                                      {item.score.toFixed(4)}
                                     </Typography>
                                   </Box>
                                   <LinearProgress
