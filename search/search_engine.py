@@ -26,15 +26,42 @@ def search(query, db_path="../search_index.db", max_results=50): # max 50 result
         doc_freq[term] = len(set(r["page_id"] for r in results))
 
     # Build TF Vectors for Documents
-
     doc_vectors = {}
-    doc_max_tf = {}
+    doc_tf = {}
+    max_tf = {}
+    max_terms = {}
 
-    for term, postings in term_docs.items(): # posting here refers to a document and the frequency in which the term appears
+
+    # for term, postings in term_docs.items(): # posting here refers to a document and the frequency in which the term appears
+    #     for row in postings:
+    #         pid, freq = row["page_id"], row["frequency"]
+    #         cursor.execute("SELECT COUNT(page_id) FROM keywords WHERE page_id = ?", (pid,))
+    #         total_terms = cursor.fetchone()[0]
+
+    #         doc_tf[pid] = total_terms
+    #         doc_vectors.setdefault(pid, {})[term] = freq
+    #         max_tf[pid] = max(max_tf.get(pid, 0), freq)
+    #         max_terms[pid] = (max(max_tf.get(pid, 0), freq), term)
+
+    for term, postings in term_docs.items():
         for row in postings:
             pid, freq = row["page_id"], row["frequency"]
+            cursor.execute("SELECT COUNT(page_id) FROM keywords WHERE page_id = ?", (pid,))
+            total_terms = cursor.fetchone()[0]
+
+            doc_tf[pid] = total_terms
             doc_vectors.setdefault(pid, {})[term] = freq
-            doc_max_tf[pid] = max(doc_max_tf.get(pid, 0), freq)
+
+    # Calculate the true max_tf for all documents we've seen
+    max_tf = {}
+    for pid in doc_vectors.keys():
+        cursor.execute("""
+            SELECT MAX(frequency) as max_freq 
+            FROM keywords 
+            WHERE page_id = ?
+        """, (pid,))
+        result = cursor.fetchone()
+        max_tf[pid] = result["max_freq"] if result["max_freq"] is not None else 0
 
     # Retrieve total number of pages crawled
     N = cursor.execute("SELECT COUNT(*) FROM pages").fetchone()[0]
@@ -44,22 +71,28 @@ def search(query, db_path="../search_index.db", max_results=50): # max 50 result
     for pid, vector in doc_vectors.items():
         doc_vec = []
         query_vec = []
-        max_tf = doc_max_tf[pid]
+        total_terms = doc_tf[pid]
 
         for term in terms:
+            # tf = vector.get(term, 0) / total_terms
             tf = vector.get(term, 0)
-            tfidf = (tf / max_tf) * math.log((N + 1) / (doc_freq.get(term, 1) + 1))
+            tfidf = tf / max_tf[pid] * math.log((N + 1) / (doc_freq.get(term, 1) + 1))
             doc_vec.append(tfidf)
             query_vec.append(1)
+        if len(terms) == 1:
+            # Single-term query: rank by raw TF-IDF
+            score = tfidf 
+            
+        else:
+            dot_product = sum(a * b for a, b in zip(doc_vec, query_vec))
+            norm_doc = math.sqrt(sum(a * a for a in doc_vec))
+            norm_query = float(math.sqrt(len(query_vec)))
+            score = dot_product / (norm_doc * norm_query)
 
-        dot_product = sum(a * b for a, b in zip(doc_vec, query_vec))
-        norm_doc = math.sqrt(sum(a * a for a in doc_vec))
-        norm_query = math.sqrt(len(query_vec))
 
-        if norm_doc == 0 or norm_query == 0:
-            continue
-
-        score = dot_product / (norm_doc * norm_query)
+        # if norm_doc == 0 or norm_query == 0:
+        #     continue
+    
 
         # Title match boost (use stemmed_title)
         cursor.execute("SELECT stemmed_title FROM pages WHERE id = ?", (pid,))
