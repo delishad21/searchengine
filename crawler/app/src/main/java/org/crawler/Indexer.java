@@ -29,6 +29,8 @@ public class Indexer {
                                                                                                                    // index
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS urls (url TEXT PRIMARY KEY, page_id INTEGER)");
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS links (parent_id INTEGER, child_id INTEGER)");
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS bigrams (bigram TEXT, page_id INTEGER, frequency INTEGER)"); // Bigram
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS trigrams (trigram TEXT, page_id INTEGER, frequency INTEGER)"); // Trigram
         stmt.close();
     }
 
@@ -58,11 +60,15 @@ public class Indexer {
             List<String> childPageUrls) {
         try {
             Map<String, Integer> keywords = processKeywords(title + " " + body);
+            Map<String, Integer> bigrams = processBigrams(title + " " + body);
+            Map<String, Integer> trigrams = processTrigrams(title + " " + body);
             String metadata = lastModified + ", " + size + " bytes";
             int pageId = getOrCreatePageId(url);
 
             insertPage(pageId, title, processTitle(title), metadata);
             insertKeywords(pageId, keywords);
+            insertBigrams(pageId, bigrams);
+            insertTrigrams(pageId, trigrams);
 
             List<Integer> childPageIds = new ArrayList<>();
             for (String childUrl : childPageUrls) {
@@ -150,6 +156,73 @@ public class Indexer {
             }
         }
         return freqMap;
+    }
+
+    private Map<String, Integer> processBigrams(String text) {
+        Map<String, Integer> bigrams = new HashMap<>();
+        String[] words = text.toLowerCase().split("\\W+");
+
+        for (int i = 0; i < words.length - 1; i++) {
+            if (!stopwords.contains(words[i]) && !stopwords.contains(words[i + 1])) {
+                String first_word = porter.stripAffixes(words[i]);
+                String second_word = porter.stripAffixes(words[i + 1]);
+                if (first_word.isEmpty() || second_word.isEmpty()) {
+                    continue;
+                }
+                String bigram = first_word + " " + second_word;
+                bigrams.put(bigram, bigrams.getOrDefault(bigram, 0) + 1);
+            }
+        }
+        return bigrams;
+    }
+
+    private Map<String, Integer> processTrigrams(String text) {
+        Map<String, Integer> trigrams = new HashMap<>();
+        String[] words = text.toLowerCase().split("\\W+");
+
+        for (int i = 0; i < words.length - 2; i++) {
+            if (!stopwords.contains(words[i]) && !stopwords.contains(words[i + 1])
+                    && !stopwords.contains(words[i + 2])) {
+                String first_word = porter.stripAffixes(words[i]);
+                String second_word = porter.stripAffixes(words[i + 1]);
+                String third_word = porter.stripAffixes(words[i + 2]);
+                if (first_word.isEmpty() || second_word.isEmpty() || third_word.isEmpty()) {
+                    continue;
+                }
+                String trigram = first_word + " " + second_word + " " + third_word;
+                trigrams.put(trigram, trigrams.getOrDefault(trigram, 0) + 1);
+            }
+        }
+        return trigrams;
+    }
+
+    private void insertBigrams(int pageId, Map<String, Integer> bigrams) throws SQLException {
+        PreparedStatement stmt = conn
+                .prepareStatement("INSERT INTO bigrams (bigram, page_id, frequency) VALUES (?, ?, ?)");
+
+        for (Map.Entry<String, Integer> entry : bigrams.entrySet()) {
+            stmt.setString(1, entry.getKey());
+            stmt.setInt(2, pageId);
+            stmt.setInt(3, entry.getValue());
+            stmt.addBatch();
+        }
+
+        stmt.executeBatch();
+        stmt.close();
+    }
+
+    private void insertTrigrams(int pageId, Map<String, Integer> trigrams) throws SQLException {
+        PreparedStatement stmt = conn
+                .prepareStatement("INSERT INTO trigrams (trigram, page_id, frequency) VALUES (?, ?, ?)");
+        for (Map.Entry<String, Integer> entry : trigrams.entrySet()) {
+            stmt.setString(1, entry.getKey());
+            stmt.setInt(2, pageId);
+            stmt.setInt(3, entry.getValue());
+            stmt.addBatch();
+        }
+
+        stmt.executeBatch();
+        stmt.close();
     }
 
     private String processTitle(String text) {

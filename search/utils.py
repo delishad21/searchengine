@@ -52,14 +52,13 @@ def extract_phrases_and_terms(query):
             raise e
     
     # Process tokens into phrases and terms
-    print(tokens)
-    phrases = [ps.stem(word) 
-               for t in tokens 
-               if (" " in t) or ("'" in t) or ('"' in t)
-               for word in t.lower().split()]
-    terms = [ps.stem(word) 
-             for t in tokens 
-             for word in t.lower().split() 
-             if word not in phrases]
+    phrases = []
+    terms = []
+    for t in tokens:
+        if (" " in t) or ("'" in t) or ('"' in t):
+            phrases.append(' '.join(ps.stem(word) for word in t.lower().split()))
+        else:
+            terms.append(ps.stem(t.lower()))
+    
     
     return phrases, terms
