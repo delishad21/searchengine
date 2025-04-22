@@ -490,8 +490,7 @@ export default function SearchEngine() {
                   color="textSecondary"
                   sx={{ mb: 2 }}
                 >
-                  About {results.length} results (
-                  {(Math.random() * (0.9 - 0.1) + 0.1).toFixed(2)} seconds)
+                  {results.length} results shown
                 </Typography>
               )}
               <Box sx={{ display: "flex", flexGrow: 1 }}>
