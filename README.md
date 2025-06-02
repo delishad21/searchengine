@@ -1,6 +1,4 @@
-# Project README
-
-### Web Search Engine Project
+# Web Search Engine Project
 
 ## Project Overview
 Complete web search engine with:
